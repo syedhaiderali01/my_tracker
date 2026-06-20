@@ -68,6 +68,7 @@ body{font-family:'Segoe UI',sans-serif;background:#0f172a;color:#f1f5f9;min-heig
 .fld label{font-size:12px;color:#94a3b8;display:block;margin-bottom:5px}
 .fld input,.fld select{width:100%;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:11px 12px;color:#f1f5f9;font-size:14px}
 .fld input::placeholder{color:#475569}
+.fld input[type="date"]{color-scheme:dark}
 .chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
 .chip{padding:6px 12px;border-radius:20px;border:1px solid #334155;background:#0f172a;color:#64748b;font-size:12px;cursor:pointer}
 .chip.sc3{background:#1d4ed8;color:#fff;border-color:#3b82f6}
@@ -83,10 +84,12 @@ body{font-family:'Segoe UI',sans-serif;background:#0f172a;color:#f1f5f9;min-heig
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#22c55e;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;z-index:999;white-space:nowrap}
 .toast.show{opacity:1}
 input:focus,select:focus{outline:none;border-color:#38bdf8}
+.fltr{display:flex;gap:6px;margin-bottom:12px}
+.fltr button{flex:1;padding:7px 2px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:#94a3b8;font-size:11px;cursor:pointer}
+.fltr button.on{background:#1d4ed8;color:#fff;border-color:#3b82f6}
 </style>
 </head>
 <body>
-
 <div class="header">
   <div class="htop">
     <h1>&#128176; Monthly Tracker</h1>
@@ -121,15 +124,10 @@ input:focus,select:focus{outline:none;border-color:#38bdf8}
 </div>
 
 <div class="cnt">
-
   <!-- DASHBOARD -->
   <div id="tab-dashboard">
-    <!-- Income sources breakdown -->
     <div class="box">
-      <div class="bh">
-        <div class="bt">&#128229; Income Sources</div>
-        <div id="totalIncLbl" style="font-size:13px;font-weight:700;color:#22c55e">Rs 0</div>
-      </div>
+      <div class="bh"><div class="bt">&#128229; Income Sources</div><div id="totalIncLbl" style="font-size:13px;font-weight:700;color:#22c55e">Rs 0</div></div>
       <div id="incSrcList"><div class="em">Koi income entry nahi</div></div>
     </div>
     <div class="sg" id="srcMini"></div>
@@ -146,11 +144,11 @@ input:focus,select:focus{outline:none;border-color:#38bdf8}
 
   <!-- ENTRIES -->
   <div id="tab-list" class="hidden">
-    <div style="display:flex;gap:8px;margin-bottom:12px">
-      <button onclick="setFilter('all')" id="fAll" style="flex:1;padding:7px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:#94a3b8;font-size:12px;cursor:pointer">All</button>
-      <button onclick="setFilter('income')" id="fInc" style="flex:1;padding:7px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:#94a3b8;font-size:12px;cursor:pointer">&#128229; Income</button>
-      <button onclick="setFilter('expense')" id="fExp" style="flex:1;padding:7px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:#94a3b8;font-size:12px;cursor:pointer">&#128228; Expense</button>
-      <button onclick="setFilter('credit')" id="fCrd" style="flex:1;padding:7px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:#94a3b8;font-size:12px;cursor:pointer">&#129309; Credit</button>
+    <div class="fltr">
+      <button id="fAll" onclick="setF('all')" class="on">All</button>
+      <button id="fIncome" onclick="setF('income')">&#128229; Income</button>
+      <button id="fExpense" onclick="setF('expense')">&#128228; Expense</button>
+      <button id="fCredit" onclick="setF('credit')">&#129309; Credit</button>
     </div>
     <div id="entList"></div>
   </div>
@@ -171,24 +169,15 @@ input:focus,select:focus{outline:none;border-color:#38bdf8}
   <div id="tab-report" class="hidden">
     <div class="box">
       <div class="bh"><div class="bt">&#128229; Income List</div><button class="bdl" onclick="dlCSV('income')">&#11015; CSV</button></div>
-      <div style="overflow-x:auto">
-        <table class="rt"><thead><tr><th>Date</th><th>Description</th><th>Source</th><th>Note</th><th>Rs</th></tr></thead>
-        <tbody id="incTb"></tbody></table>
-      </div>
+      <div style="overflow-x:auto"><table class="rt"><thead><tr><th>Date</th><th>Description</th><th>Source</th><th>Note</th><th>Rs</th></tr></thead><tbody id="incTb"></tbody></table></div>
     </div>
     <div class="box">
       <div class="bh"><div class="bt">&#128196; Expense List</div><button class="bdl" onclick="dlCSV('expenses')">&#11015; CSV</button></div>
-      <div style="overflow-x:auto">
-        <table class="rt"><thead><tr><th>Date</th><th>Description</th><th>Cat</th><th>Source</th><th>Rs</th></tr></thead>
-        <tbody id="expTb"></tbody></table>
-      </div>
+      <div style="overflow-x:auto"><table class="rt"><thead><tr><th>Date</th><th>Description</th><th>Cat</th><th>Source</th><th>Rs</th></tr></thead><tbody id="expTb"></tbody></table></div>
     </div>
     <div class="box">
       <div class="bh"><div class="bt">&#129309; Credit / Udhar List</div><button class="bdl" onclick="dlCSV('credit')">&#11015; CSV</button></div>
-      <div style="overflow-x:auto">
-        <table class="rt"><thead><tr><th>Date</th><th>Description</th><th>Source</th><th>Note</th><th>Rs</th></tr></thead>
-        <tbody id="crdTb"></tbody></table>
-      </div>
+      <div style="overflow-x:auto"><table class="rt"><thead><tr><th>Date</th><th>Description</th><th>Source</th><th>Note</th><th>Rs</th></tr></thead><tbody id="crdTb"></tbody></table></div>
     </div>
   </div>
 
@@ -201,14 +190,19 @@ input:focus,select:focus{outline:none;border-color:#38bdf8}
         <button class="ttb" id="tInc" onclick="setType('income')">&#128229; Income</button>
         <button class="ttb" id="tCrd" onclick="setType('credit')">&#129309; Credit</button>
       </div>
+
+      <!-- DATE PICKER -->
+      <div class="fld">
+        <label>&#128197; Date — Kisi bhi din ki entry karo</label>
+        <input type="date" id="fDate"/>
+      </div>
+
       <div class="fld"><label>Description</label><input type="text" id="fDesc" placeholder="Kya kharcha / kahan se aaya?"/></div>
       <div class="fld"><label>Amount (Rs)</label><input type="number" id="fAmt" placeholder="0"/></div>
-      <!-- Payment Source for expense/credit -->
       <div id="paySrcSec" class="fld">
-        <label>&#128179; Payment Source — Paise kahan se hain?</label>
+        <label>&#128179; Payment Source</label>
         <div class="chips" id="srcChips"></div>
       </div>
-      <!-- Income Source for income -->
       <div id="incSrcSec" class="fld hidden">
         <label>&#128229; Income Source — Kahan se aayi?</label>
         <div class="chips" id="incSrcChips"></div>
@@ -222,7 +216,6 @@ input:focus,select:focus{outline:none;border-color:#38bdf8}
       <button class="bcan hidden" id="canBtn" onclick="cancelEdit()">Cancel</button>
     </div>
   </div>
-
 </div>
 <div class="toast" id="toast"></div>
 
@@ -239,6 +232,12 @@ var S={entries:[],sm:new Date().getMonth(),sy:new Date().getFullYear(),fT:'expen
 
 function load(){var d=localStorage.getItem('mtV4');if(d){var p=JSON.parse(d);S.entries=p.entries||[];}}
 function sv(){localStorage.setItem('mtV4',JSON.stringify({entries:S.entries}));}
+
+function todayStr(){var n=new Date();var y=n.getFullYear();var m=String(n.getMonth()+1).padStart(2,'0');var d=String(n.getDate()).padStart(2,'0');return y+'-'+m+'-'+d;}
+function fmtDate(s){if(!s)return'';var p=s.split('-');return p[2]+'/'+p[1]+'/'+p[1];}
+function displayDate(s){if(!s)return'';var p=s.split('-');return p[2]+'/'+p[1]+'/'+p[0];}
+function dateToMonthYear(s){if(!s)return{m:new Date().getMonth(),y:new Date().getFullYear()};var p=s.split('-');return{m:parseInt(p[1])-1,y:parseInt(p[0])};}
+
 function mE(){return S.entries.filter(function(e){return e.month===S.sm&&e.year===S.sy;});}
 function pkr(n){return"Rs "+Number(n||0).toLocaleString('en-PK');}
 function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2200);}
@@ -246,17 +245,15 @@ function toast(m){var t=document.getElementById('toast');t.textContent=m;t.class
 function sw(tab){
   ['dashboard','list','sources','report','add'].forEach(function(t){document.getElementById('tab-'+t).classList.toggle('hidden',t!==tab);});
   document.querySelectorAll('.tb').forEach(function(b,i){b.classList.toggle('active',['dashboard','list','sources','report','add'][i]===tab);});
-  if(tab==='add'&&!S.eId)resetForm();
+  if(tab==='add'&&!S.eId){resetForm();}
   render();
 }
 
-function setFilter(f){
+function setF(f){
   S.filter=f;
   ['all','income','expense','credit'].forEach(function(x){
-    var btn=document.getElementById('f'+x.charAt(0).toUpperCase()+x.slice(1));
-    if(btn) btn.style.background=x===f?'#1d4ed8':'#1e293b';
-    if(btn) btn.style.color=x===f?'#fff':'#94a3b8';
-    if(btn) btn.style.borderColor=x===f?'#3b82f6':'#334155';
+    var b=document.getElementById('f'+x.charAt(0).toUpperCase()+x.slice(1));
+    if(b){b.classList.toggle('on',x===f);}
   });
   render();
 }
@@ -282,7 +279,7 @@ function render(){
   // Income sources dashboard
   var incEs=ents.filter(function(e){return e.type==='income';});
   document.getElementById('totalIncLbl').textContent=pkr(totInc);
-  if(!incEs.length){document.getElementById('incSrcList').innerHTML='<div class="em">Koi income entry nahi — Add tab se add karo</div>';}
+  if(!incEs.length){document.getElementById('incSrcList').innerHTML='<div class="em">Koi income entry nahi</div>';}
   else{
     var byS={};
     incEs.forEach(function(e){if(!byS[e.isrc])byS[e.isrc]=0;byS[e.isrc]+=e.amount;});
@@ -291,7 +288,7 @@ function render(){
       return'<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:#cbd5e1">'+(IICONS[k]||'&#128176;')+' '+k+'</span><span style="color:#22c55e">'+pkr(byS[k])+'</span></div><div class="bbg"><div style="background:linear-gradient(90deg,#22c55e,#38bdf8);border-radius:999px;height:5px;width:'+pct+'%"></div></div></div>';
     }).join('');}
 
-  // Expense payment source mini cards
+  // Expense payment source mini
   var expE=ents.filter(function(e){return e.type==='expense';});
   var srcD=PSRCS.map(function(s){return{s:s,a:expE.filter(function(e){return e.source===s;}).reduce(function(x,e){return x+e.amount;},0),c:expE.filter(function(e){return e.source===s;}).length};}).filter(function(x){return x.c>0;});
   document.getElementById('srcMini').innerHTML=srcD.map(function(x){return'<div class="scard"><div class="sn">'+SICONS[x.s]+' '+x.s+'</div><div class="sa" style="color:#f87171">'+pkr(x.a)+'</div><div class="sc2">'+x.c+' entry</div></div>';}).join('');
@@ -306,38 +303,38 @@ function render(){
   if(totInc>0){bb.style.display='block';var p=Math.min(totExp/totInc*100,100);var brf=document.getElementById('budBar');brf.style.width=p+'%';brf.style.background=totExp>totInc?'linear-gradient(90deg,#f87171,#dc2626)':'linear-gradient(90deg,#22c55e,#38bdf8)';document.getElementById('budPct').textContent=Math.round(totExp/totInc*100)+'% used - '+pkr(bal)+' remaining';}
   else bb.style.display='none';
 
-  // Entry list with filter
+  // Entry list
   var el=document.getElementById('entList');
   var filtered=S.filter==='all'?mE():mE().filter(function(e){return e.type===S.filter;});
-  var sorted=filtered.slice().reverse();
+  var sorted=filtered.slice().sort(function(a,b){return b.rawDate>a.rawDate?1:-1;});
   if(!sorted.length){el.innerHTML='<div class="em" style="margin-top:30px;font-size:14px">Koi entry nahi</div>';}
   else{el.innerHTML=sorted.map(function(e){
-    var isInc=e.type==='income', isCrd=e.type==='credit', isExp=e.type==='expense';
+    var isInc=e.type==='income',isCrd=e.type==='credit';
     var amtColor=isInc?'#22c55e':isCrd?'#fb923c':'#f87171';
     var icon=isInc?(IICONS[e.isrc]||'&#128229;'):isCrd?'&#129309;':ICONS[e.category||'Other'];
     var typeLabel=isInc?('Income - '+(e.isrc||'')):isCrd?'Credit/Udhar':(e.category||'Expense');
-    return'<div class="ec '+(isCrd?'crd':isInc?'inc':'')+'"><div class="erow"><div class="ei">'+icon+'</div><div class="en"><div class="ed">'+e.desc+'</div><div class="em2">'+typeLabel+' - '+e.date+'</div></div><div class="ert"><div class="ea" style="color:'+amtColor+'">'+(isInc?'+':'-')+pkr(e.amount)+'</div><div class="ebs"><button class="bedit" onclick="startEdit('+e.id+')">Edit</button><button class="bdel" onclick="delEntry('+e.id+')">Del</button></div></div></div><div class="edt">'+(e.source&&!isInc?'<div class="dc">'+SICONS[e.source]+' Source: <span>'+e.source+'</span></div>':'')+(e.note?'<div class="dc">&#128205; <span>'+e.note+'</span></div>':'')+'</div></div>';
+    return'<div class="ec '+(isCrd?'crd':isInc?'inc':'')+'"><div class="erow"><div class="ei">'+icon+'</div><div class="en"><div class="ed">'+e.desc+'</div><div class="em2">'+typeLabel+' &bull; '+displayDate(e.rawDate)+'</div></div><div class="ert"><div class="ea" style="color:'+amtColor+'">'+(isInc?'+':'')+pkr(e.amount)+'</div><div class="ebs"><button class="bedit" onclick="startEdit('+e.id+')">Edit</button><button class="bdel" onclick="delEntry('+e.id+')">Del</button></div></div></div><div class="edt">'+(e.source&&!isInc?'<div class="dc">'+SICONS[e.source]+' <span>'+e.source+'</span></div>':'')+(e.note?'<div class="dc">&#128205; <span>'+e.note+'</span></div>':'')+'</div></div>';
   }).join('');}
 
-  // Income sources detail tab
+  // Income sources detail
   var isd=document.getElementById('incSrcDet');
   if(!incEs.length){isd.innerHTML='<div class="em">Koi income entry nahi</div>';}
-  else{isd.innerHTML=ISRCS.map(function(src){var se=incEs.filter(function(e){return e.isrc===src;});if(!se.length)return'';var t=se.reduce(function(s,e){return s+e.amount;},0);return'<div style="margin-bottom:16px"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div style="font-size:13px;font-weight:700;color:#e2e8f0">'+(IICONS[src]||'&#128176;')+' '+src+'</div><div style="font-size:13px;font-weight:700;color:#22c55e">'+pkr(t)+'</div></div>'+se.map(function(e){return'<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #334155;font-size:12px"><div><div style="color:#cbd5e1">'+e.desc+'</div><div style="color:#64748b;font-size:10px">'+e.date+(e.note?' - '+e.note:'')+'</div></div><div style="color:#22c55e;font-weight:600;white-space:nowrap;margin-left:8px">+'+pkr(e.amount)+'</div></div>';}).join('')+'</div>';}).join('');}
+  else{isd.innerHTML=ISRCS.map(function(src){var se=incEs.filter(function(e){return e.isrc===src;});if(!se.length)return'';var t=se.reduce(function(s,e){return s+e.amount;},0);return'<div style="margin-bottom:16px"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div style="font-size:13px;font-weight:700;color:#e2e8f0">'+(IICONS[src]||'&#128176;')+' '+src+'</div><div style="font-size:13px;font-weight:700;color:#22c55e">'+pkr(t)+'</div></div>'+se.map(function(e){return'<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #334155;font-size:12px"><div><div style="color:#cbd5e1">'+e.desc+'</div><div style="color:#64748b;font-size:10px">'+displayDate(e.rawDate)+(e.note?' - '+e.note:'')+'</div></div><div style="color:#22c55e;font-weight:600;white-space:nowrap;margin-left:8px">+'+pkr(e.amount)+'</div></div>';}).join('')+'</div>';}).join('');}
 
   // Expense sources detail
   var sd=document.getElementById('srcDet');
-  var sh=PSRCS.map(function(src){var se=expE.filter(function(e){return e.source===src;});if(!se.length)return'';var t=se.reduce(function(s,e){return s+e.amount;},0);return'<div style="margin-bottom:16px"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div style="font-size:13px;font-weight:700;color:#e2e8f0">'+SICONS[src]+' '+src+'</div><div style="font-size:13px;font-weight:700;color:#f87171">'+pkr(t)+'</div></div>'+se.map(function(e){return'<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #334155;font-size:12px"><div><div style="color:#cbd5e1">'+e.desc+'</div><div style="color:#64748b;font-size:10px">'+e.date+(e.note?' - '+e.note:'')+(e.category?' - '+e.category:'')+'</div></div><div style="color:#f87171;font-weight:600;white-space:nowrap;margin-left:8px">'+pkr(e.amount)+'</div></div>';}).join('')+'</div>';}).join('');
+  var sh=PSRCS.map(function(src){var se=expE.filter(function(e){return e.source===src;});if(!se.length)return'';var t=se.reduce(function(s,e){return s+e.amount;},0);return'<div style="margin-bottom:16px"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div style="font-size:13px;font-weight:700;color:#e2e8f0">'+SICONS[src]+' '+src+'</div><div style="font-size:13px;font-weight:700;color:#f87171">'+pkr(t)+'</div></div>'+se.map(function(e){return'<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #334155;font-size:12px"><div><div style="color:#cbd5e1">'+e.desc+'</div><div style="color:#64748b;font-size:10px">'+displayDate(e.rawDate)+(e.note?' - '+e.note:'')+(e.category?' - '+e.category:'')+'</div></div><div style="color:#f87171;font-weight:600;white-space:nowrap;margin-left:8px">'+pkr(e.amount)+'</div></div>';}).join('')+'</div>';}).join('');
   sd.innerHTML=sh||'<div class="em">Koi entry nahi</div>';
 
   // Reports
-  var incL=ents.filter(function(e){return e.type==='income';});
-  document.getElementById('incTb').innerHTML=incL.length?incL.map(function(e){return'<tr><td>'+e.date+'</td><td>'+e.desc+'</td><td><span class="bdg bo">'+(e.isrc||'-')+'</span></td><td style="color:#64748b">'+(e.note||'-')+'</td><td style="color:#22c55e;font-weight:600">+'+pkr(e.amount)+'</td></tr>';}).join(''):'<tr><td colspan="5" style="text-align:center;color:#475569;padding:12px">Koi income nahi</td></tr>';
+  var incL=ents.filter(function(e){return e.type==='income';}).sort(function(a,b){return b.rawDate>a.rawDate?1:-1;});
+  document.getElementById('incTb').innerHTML=incL.length?incL.map(function(e){return'<tr><td>'+displayDate(e.rawDate)+'</td><td>'+e.desc+'</td><td><span class="bdg bo">'+(e.isrc||'-')+'</span></td><td style="color:#64748b">'+(e.note||'-')+'</td><td style="color:#22c55e;font-weight:600">+'+pkr(e.amount)+'</td></tr>';}).join(''):'<tr><td colspan="5" style="text-align:center;color:#475569;padding:12px">Koi income nahi</td></tr>';
 
-  var expL=ents.filter(function(e){return e.type==='expense';});
-  document.getElementById('expTb').innerHTML=expL.length?expL.map(function(e){return'<tr><td>'+e.date+'</td><td>'+e.desc+'</td><td>'+(e.category||'-')+'</td><td><span class="bdg '+(SBDG[e.source]||'bo')+'">'+(e.source||'-')+'</span></td><td style="color:#f87171;font-weight:600">'+pkr(e.amount)+'</td></tr>';}).join(''):'<tr><td colspan="5" style="text-align:center;color:#475569;padding:12px">Koi expense nahi</td></tr>';
+  var expL=ents.filter(function(e){return e.type==='expense';}).sort(function(a,b){return b.rawDate>a.rawDate?1:-1;});
+  document.getElementById('expTb').innerHTML=expL.length?expL.map(function(e){return'<tr><td>'+displayDate(e.rawDate)+'</td><td>'+e.desc+'</td><td>'+(e.category||'-')+'</td><td><span class="bdg '+(SBDG[e.source]||'bo')+'">'+(e.source||'-')+'</span></td><td style="color:#f87171;font-weight:600">'+pkr(e.amount)+'</td></tr>';}).join(''):'<tr><td colspan="5" style="text-align:center;color:#475569;padding:12px">Koi expense nahi</td></tr>';
 
-  var crdL=ents.filter(function(e){return e.type==='credit';});
-  document.getElementById('crdTb').innerHTML=crdL.length?crdL.map(function(e){return'<tr><td>'+e.date+'</td><td>'+e.desc+'</td><td><span class="bdg '+(SBDG[e.source]||'bo')+'">'+(e.source||'-')+'</span></td><td style="color:#64748b">'+(e.note||'-')+'</td><td style="color:#fb923c;font-weight:600">'+pkr(e.amount)+'</td></tr>';}).join(''):'<tr><td colspan="5" style="text-align:center;color:#475569;padding:12px">Koi credit nahi</td></tr>';
+  var crdL=ents.filter(function(e){return e.type==='credit';}).sort(function(a,b){return b.rawDate>a.rawDate?1:-1;});
+  document.getElementById('crdTb').innerHTML=crdL.length?crdL.map(function(e){return'<tr><td>'+displayDate(e.rawDate)+'</td><td>'+e.desc+'</td><td><span class="bdg '+(SBDG[e.source]||'bo')+'">'+(e.source||'-')+'</span></td><td style="color:#64748b">'+(e.note||'-')+'</td><td style="color:#fb923c;font-weight:600">'+pkr(e.amount)+'</td></tr>';}).join(''):'<tr><td colspan="5" style="text-align:center;color:#475569;padding:12px">Koi credit nahi</td></tr>';
 
   renderChips();
 }
@@ -363,15 +360,26 @@ function setType(t){
 }
 
 function submitEntry(){
+  var dateVal=document.getElementById('fDate').value;
   var desc=document.getElementById('fDesc').value.trim();
   var amount=parseFloat(document.getElementById('fAmt').value);
   var note=document.getElementById('fNote').value.trim();
   if(!desc||!amount){toast('Description aur amount zaroori hai!');return;}
-  var entry={desc:desc,amount:amount,note:note,type:S.fT};
+  if(!dateVal){toast('Date select karo!');return;}
+
+  var my=dateToMonthYear(dateVal);
+  var entry={desc:desc,amount:amount,note:note,type:S.fT,rawDate:dateVal,month:my.m,year:my.y};
   if(S.fT==='income'){entry.isrc=S.fIS;}
   else{entry.source=S.fS;if(S.fT==='expense')entry.category=S.fC;}
-  if(S.eId!==null){S.entries=S.entries.map(function(e){return e.id===S.eId?Object.assign({},e,entry):e;});S.eId=null;toast('Update ho gayi!');}
-  else{entry.id=Date.now();entry.month=S.sm;entry.year=S.sy;entry.date=new Date().toLocaleDateString('en-PK');S.entries.push(entry);toast('Entry add ho gayi!');}
+
+  if(S.eId!==null){
+    S.entries=S.entries.map(function(e){return e.id===S.eId?Object.assign({},e,entry):e;});
+    S.eId=null;toast('Update ho gayi!');
+  }else{
+    entry.id=Date.now();
+    S.entries.push(entry);
+    toast('Entry add ho gayi!');
+  }
   sv();resetForm();sw('list');
 }
 
@@ -383,6 +391,7 @@ function delEntry(id){
 function startEdit(id){
   var e=S.entries.find(function(x){return x.id===id;});if(!e)return;
   S.eId=id;
+  document.getElementById('fDate').value=e.rawDate||todayStr();
   document.getElementById('fDesc').value=e.desc;
   document.getElementById('fAmt').value=e.amount;
   document.getElementById('fNote').value=e.note||'';
@@ -397,7 +406,10 @@ function startEdit(id){
 function cancelEdit(){S.eId=null;resetForm();sw('list');}
 
 function resetForm(){
-  document.getElementById('fDesc').value='';document.getElementById('fAmt').value='';document.getElementById('fNote').value='';
+  document.getElementById('fDate').value=todayStr();
+  document.getElementById('fDesc').value='';
+  document.getElementById('fAmt').value='';
+  document.getElementById('fNote').value='';
   S.fC='Food';S.fS='Cash';S.fIS='Salary';S.eId=null;setType('expense');
   document.getElementById('fTitle').textContent='Nayi Entry';
   document.getElementById('subBtn').textContent='Entry Add karo';
@@ -411,15 +423,15 @@ function dlCSV(type){
   var rows,fn;
   if(type==='income'){
     rows=[['Date','Description','Income Source','Note','Amount(Rs)']];
-    ents.filter(function(e){return e.type==='income';}).forEach(function(e){rows.push([e.date,e.desc,e.isrc||'',e.note||'',e.amount]);});
+    ents.filter(function(e){return e.type==='income';}).forEach(function(e){rows.push([displayDate(e.rawDate),e.desc,e.isrc||'',e.note||'',e.amount]);});
     fn='Income_'+mn+'_'+S.sy+'.csv';
   }else if(type==='expenses'){
     rows=[['Date','Description','Category','Payment Source','Note','Amount(Rs)']];
-    ents.filter(function(e){return e.type==='expense';}).forEach(function(e){rows.push([e.date,e.desc,e.category||'',e.source||'',e.note||'',e.amount]);});
+    ents.filter(function(e){return e.type==='expense';}).forEach(function(e){rows.push([displayDate(e.rawDate),e.desc,e.category||'',e.source||'',e.note||'',e.amount]);});
     fn='Expenses_'+mn+'_'+S.sy+'.csv';
   }else if(type==='credit'){
     rows=[['Date','Description','Source','Note','Amount(Rs)']];
-    ents.filter(function(e){return e.type==='credit';}).forEach(function(e){rows.push([e.date,e.desc,e.source||'',e.note||'',e.amount]);});
+    ents.filter(function(e){return e.type==='credit';}).forEach(function(e){rows.push([displayDate(e.rawDate),e.desc,e.source||'',e.note||'',e.amount]);});
     fn='Credit_'+mn+'_'+S.sy+'.csv';
   }else{
     rows=[['Payment Source','Total Spent(Rs)','Transactions']];
@@ -438,7 +450,8 @@ load();
 var n=new Date();
 document.getElementById('selM').value=n.getMonth();
 document.getElementById('selY').value=n.getFullYear();
-setFilter('all');
+document.getElementById('fDate').value=todayStr();
+setF('all');
 render();
 </script>
 </body>
